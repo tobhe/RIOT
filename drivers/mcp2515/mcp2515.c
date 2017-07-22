@@ -43,7 +43,6 @@ static int _power_down(candev_t *candev);
 static void mcp2515_init(mcp2515_t *dev, void);
 static void mcp2515_reset(mcp2515_t *dev, void);
 static void mcp2515_read(mcp2515_t *dev, uint8_t addr, uint8_t *rx, uint16_t size);
-static void mcp2515_write(mcp2515_t *dev, uint8_t addr, uint8_t *tx, uint16_t size);
 static void mcp2515_read_rx(mcp2515_t *dev, uint8_t mode, uint8_t *rx, uint16_t size);
 static void mcp2515_write_tx(mcp2515_t *dev, uint8_t mode, uint8_t *tx, uint16_t size);
 static void mcp2515_bit_modify(mcp2515_t *dev, uint8_t addr, uint8_t mask, uint8_t data);
@@ -61,6 +60,19 @@ static const candev_driver_t candev_mcp2515_driver = {
 	.set_filter = _set_filter,
 	.remove_filter = _remove_filter,
 };
+
+static int _send(candev_t *dev, const struct can_frame *frame)
+{
+  spi_acquire(dev->spi);
+	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_SPI_WRITE);
+	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_TXB0CTRL);
+  spi_transfer_bytes(dev->spi, dev->cs, true, 0b00000000);
+  spi_transfer_bytes(dev->spi, dev->cs, false, frame, sizeof(can->frame));
+	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_SPI_WRITE);
+	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_TXB0CTRL);
+  spi_transfer_bytes(dev->spi, dev->cs, false, 0b00001000);
+	spi_release(dev->spi);
+}
 
 void mcp215_init(mpc2515_t *dev) {
 	spi_acquire(dev->spi, dev->cs, SPI_MODE_3, SPI_CLK_1MHZ);
@@ -82,13 +94,13 @@ void mcp2515_rts(mcp2515 *dev, uint8_t mode) {
 
 void mcp2515_write(mcp2515 *dev,
                    uint8_t addr,
-                   uint8_t *tx,
-                   uint16_t size)
+                   void *data,
+                   size_t size)
 {
 	spi_acquire(dev->spi);
 	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_SPI_WRITE);
 	spi_transfer_byte(dev->spi, dev->cs, true, addr);
-	spi_transfer_bytes(dev->spi, dev->cs, false, tx, NULL, size);
+	spi_transfer_bytes(dev->spi, dev->cs, false, data, NULL, size);
 	spi_release(dev->spi);
 }
 
