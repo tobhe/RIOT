@@ -30,15 +30,17 @@ extern "C" {
 #include "periph/spi.h"
 
 typedef struct {
-  spi_t spi;
-  spi_clk_t clk;
-  spi_cs_t cs;
-  gpio_t int_pin;
+	candev_t candev;
+	spi_t spi;
+	spi_clk_t clk;
+	spi_cs_t cs;
+	gpio_t int_pin;
 } mcp2515_t;
 
-
+void mcp2515_init(mcp2515_t *);
 
 
 #ifdef __cplusplus
 }
+#endif
 #endif
