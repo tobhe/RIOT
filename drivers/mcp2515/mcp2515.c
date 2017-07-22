@@ -40,6 +40,17 @@ static int _remove_filter(candev_t *candev, const struct can_filter *filter);
 static int _power_up(candev_t *candev);
 static int _power_down(candev_t *candev);
 
+static void mcp2515_init(mcp2515_t *dev, void);
+static void mcp2515_reset(mcp2515_t *dev, void);
+static void mcp2515_read(mcp2515_t *dev, uint8_t addr, uint8_t *rx, uint16_t size);
+static void mcp2515_write(mcp2515_t *dev, uint8_t addr, uint8_t *tx, uint16_t size);
+static void mcp2515_read_rx(mcp2515_t *dev, uint8_t mode, uint8_t *rx, uint16_t size);
+static void mcp2515_write_tx(mcp2515_t *dev, uint8_t mode, uint8_t *tx, uint16_t size);
+static void mcp2515_bit_modify(mcp2515_t *dev, uint8_t addr, uint8_t mask, uint8_t data);
+static uint8_t mcp2515_read_status(mcp2515_t *dev);
+static uint8_t mcp2515_rx_status(mcp2515_t *dev);
+
+
 static const candev_driver_t candev_mcp2515_driver = {
 	.send = _send,
 	.init = _init,
@@ -81,7 +92,8 @@ void mcp2515_write(mcp2515 *dev,
 	spi_release(dev->spi);
 }
 
-void mcp2515_read(uint8_t addr,
+void mcp2515_read(mcp2515_t *dev,
+                  uint8_t addr,
                   uint8_t *rx,
                   uint16_t size)
 {
@@ -92,7 +104,8 @@ void mcp2515_read(uint8_t addr,
 	spi_release(dev->spi);
 }
 
-void mcp2515_read_rx(uint8_t mode,
+void mcp2515_read_rx(mcp2515_t *dev,
+                     uint8_t mode,
                      uint8_t *rx,
                      uint16_t size)
 {
@@ -103,7 +116,8 @@ void mcp2515_read_rx(uint8_t mode,
 	spi_release(dev->spi);
 }
 
-void mcp2515_write_tx(uint8_t mode,
+void mcp2515_write_tx(mcp2515_t *dev,
+                      uint8_t mode,
                       uint8_t *tx,
                       uint16_t size)
 {
@@ -115,7 +129,7 @@ void mcp2515_write_tx(uint8_t mode,
 }
 
 
-uint8_t mcp2515_read_status() {
+uint8_t mcp2515_read_status(mcp2515_t *dev) {
 	spi_acquire(dev->spi);
 	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_SPI_READ_STATUS);
 	uint8_t ret = spi_transfer_byte(dev->spi, dev->cs, false, c);
@@ -123,7 +137,7 @@ uint8_t mcp2515_read_status() {
 	return ret;
 }
 
-uint8_t mcp2515_read_rx_status() {
+uint8_t mcp2515_read_rx_status(mcp2515_t *dev) {
 	spi_acquire(dev->spi);
 	spi_transfer_byte(dev->spi, dev->cs, true, MCP2515_SPI_RX_STATUS);
 	uint8_t ret = spi_transfer_byte(dev->spi, dev->cs, false, c);
@@ -131,7 +145,8 @@ uint8_t mcp2515_read_rx_status() {
 	return ret;
 }
 
-void mcp2515_bit_modify(uint8_t addr,
+void mcp2515_bit_modify(mcp2515_t *dev,
+                        uint8_t addr,
                         uint8_t mask,
                         uint8_t data)
 {
