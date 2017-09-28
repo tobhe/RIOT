@@ -5,17 +5,6 @@
  * General Public License v2.1. See the file LICENSE in the top level
  * directory for more details.
  */
-
-#ifndef MEMARRAY_H
-#define MEMARRAY_H
-
-#include "stdint.h"
-#include "stdlib.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * @defgroup    sys_memarray memory array allocator
  * @ingroup     sys
@@ -25,22 +14,33 @@ extern "C" {
  * @brief       pseudo dynamic allocation in static memory arrays
  * @author      Tobias Heider <heidert@nm.ifi.lmu.de>
  */
+
+#ifndef MEMARRAY_H
+#define MEMARRAY_H
+
+#include <stdint.h>
+#include <stdlib.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
-  size_t size;
-  size_t count;
-  void *first_free;
-  void *data;
+    size_t size;        /**< size of single array element*/
+    size_t count;       /**< count of elements in array */
+    void *first_free;   /**< first free element */
+    void *data;         /**< static memory pool */
 } memarray_t;
 
 /**
  * Initialize memory
  */
 #define MEMARRAY(name, structure, num)                                         \
-  static structure _data_##name[num];                                          \
-  static memarray_t name = {.size = sizeof(structure),                         \
-                            .count = num,                                      \
-                            .first_free = _data_##name,                        \
-                            .data = _data_##name};
+    static structure _data_ ## name[num];                                      \
+    static memarray_t name = { .size = sizeof(structure),                      \
+                               .count = num,                                   \
+                               .first_free = _data_ ## name,                   \
+                               .data = _data_ ## name };
 
 void memarray_init(memarray_t *mem);
 
