@@ -37,16 +37,13 @@ typedef struct {
  */
 #define MEMARRAY(name, structure, num)                                         \
     static structure _data_ ## name[num];                                      \
-    static memarray_t name = { .size = sizeof(structure),                      \
-                               .count = num,                                   \
-                               .first_free = _data_ ## name,                   \
-                               .data = _data_ ## name };
+    static memarray_t name = { .first_free = _data_ ## name };
 
-void memarray_init(memarray_t *mem);
+void memarray_init(memarray_t *mem, size_t num, size_t size);
 
 void *memarray_alloc(memarray_t *mem);
 
-uint8_t memarray_free(memarray_t *mem, void *ptr);
+void memarray_free(memarray_t *mem, void *ptr);
 
 #ifdef __cplusplus
 }
