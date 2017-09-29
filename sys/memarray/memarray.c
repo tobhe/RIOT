@@ -6,8 +6,8 @@
  * directory for more details.
  */
 
-#include <string.h>
 #include "memarray.h"
+#include <string.h>
 
 void *memarray_alloc(memarray_t *mem)
 {
@@ -19,25 +19,16 @@ void *memarray_alloc(memarray_t *mem)
     return free;
 }
 
-void memarray_init(memarray_t *mem)
+void memarray_init(memarray_t *mem, size_t num, size_t size)
 {
-    for (size_t i = 0; i < mem->count - 1; i++) {
-        void *next = ((char *)mem->data) + ((i + 1) * mem->size);
-        memcpy(((char *)mem->data) + (i * mem->size), &next, sizeof(void *));
+    for (size_t i = 0; i < num - 1; i++) {
+        void *next = ((char *)mem->first_free) + ((i + 1) * size);
+        memcpy(((char *)mem->first_free) + (i * size), &next, sizeof(void *));
     }
 }
 
-uint8_t memarray_free(memarray_t *mem, void *ptr)
+void memarray_free(memarray_t *mem, void *ptr)
 {
-    char *iter = mem->data;
-
-    for (size_t i = 0; i < mem->count; i++) {
-        if (iter == ptr) {
-            memcpy(iter, &mem->first_free, sizeof(void *));
-            mem->first_free = iter;
-            return 0;
-        }
-        iter += mem->size;
-    }
-    return 1;
+    memcpy(ptr, &mem->first_free, sizeof(void *));
+    mem->first_free = ptr;
 }
