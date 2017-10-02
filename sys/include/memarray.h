@@ -32,8 +32,8 @@ typedef struct {
 /**
  * Initialize memory
  */
-#define MEMARRAY(name, structure, num)                                         \
-    static structure _data_ ## name[num];                                      \
+#define MEMARRAY(name, size, num)                                         \
+    static uint8_t _data_ ## name[num * size];                            \
     static memarray_t name = { .first_free = _data_ ## name };
 
 void memarray_init(memarray_t *mem, size_t num, size_t size);
