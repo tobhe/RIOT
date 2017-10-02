@@ -26,10 +26,7 @@ extern "C" {
 #endif
 
 typedef struct {
-    size_t size;        /**< size of single array element*/
-    size_t count;       /**< count of elements in array */
-    void *first_free;   /**< first free element */
-    void *data;         /**< static memory pool */
+    void *first_free; /**< head of the free list */
 } memarray_t;
 
 /**
