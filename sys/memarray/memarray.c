@@ -19,7 +19,7 @@ void *memarray_alloc(memarray_t *mem)
     return free;
 }
 
-void memarray_init(memarray_t *mem, size_t num, size_t size)
+void memarray_init(memarray_t *mem, size_t size, size_t num)
 {
     for (size_t i = 0; i < num - 1; i++) {
         void *next = ((char *)mem->first_free) + ((i + 1) * size);
