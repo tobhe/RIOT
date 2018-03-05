@@ -124,9 +124,6 @@ endif
 ifneq (,$(filter nanocoap,$(USEMODULE)))
   DIRS += net/application_layer/nanocoap
 endif
-ifneq (,$(filter memarray,$(USEMODULE)))
-  DIRS += memarray
-endif
 
 DIRS += $(dir $(wildcard $(addsuffix /Makefile, ${USEMODULE})))
 
