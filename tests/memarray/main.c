@@ -40,9 +40,9 @@ struct block_t {
 
 struct block_t block_storage_data[MAX_NUMBER_BLOCKS];
 memarray_t block_storage = {
-  .free_data = block_storage_data,
-  .size = sizeof(struct block_t),
-  .num = MAX_NUMBER_BLOCKS,
+    .free_data = block_storage_data,
+    .size = sizeof(struct block_t),
+    .num = MAX_NUMBER_BLOCKS,
 };
 
 int total = 0;
@@ -76,7 +76,6 @@ void fill_memory(struct block_t *head)
 
 void free_memory(struct block_t *head)
 {
-
     struct block_t *old;
 
     while (head) {
