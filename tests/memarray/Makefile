@@ -1,7 +1,4 @@
-# name of your application
-APPLICATION = memarray
 include ../Makefile.tests_common
-
 USEMODULE += memarray
 
 # Used for invoking _ps_handler
