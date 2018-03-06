@@ -104,8 +104,7 @@ int main(void)
     _ps_handler(0, NULL);
 
     while (count < NUMBER_OF_TESTS) {
-        struct block_t *head = NULL;
-        head = (struct block_t *) memarray_alloc(&block_storage);
+        struct block_t *head = (struct block_t *) memarray_alloc(&block_storage);
 
         printf("TEST #%i:\n", count + 1 );
         fill_memory(head);
