@@ -39,17 +39,13 @@ struct block_t {
 };
 
 struct block_t block_storage_data[MAX_NUMBER_BLOCKS];
-memarray_t block_storage = {
-    .free_data = block_storage_data,
-    .size = sizeof(struct block_t),
-    .num = MAX_NUMBER_BLOCKS,
-};
+memarray_t block_storage;
 
 int total = 0;
 
 static void memory_block_init(void)
 {
-    memarray_init(&block_storage);
+    memarray_init(&block_storage, block_storage_data, sizeof(struct block_t), MAX_NUMBER_BLOCKS);
 }
 
 void fill_memory(struct block_t *head)

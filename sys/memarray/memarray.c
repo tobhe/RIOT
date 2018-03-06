@@ -12,12 +12,15 @@
 #define ENABLE_DEBUG    (0)
 #include "debug.h"
 
-void memarray_init(memarray_t *mem)
+void memarray_init(memarray_t *mem, void *data, size_t size, size_t num)
 {
     DEBUG("memarray: Initialize memarray of %zu times %zu Bytes at %p\n",
-          mem->num,
-          mem->size,
-          mem->free_data);
+          num, size, data);
+
+    mem->free_data = data;
+    mem->size = size;
+    mem->num = num;
+
     for (size_t i = 0; i < (mem->num - 1); i++) {
         void *next = ((char *)mem->free_data) + ((i + 1) * mem->size);
         memcpy(((char *)mem->free_data) + (i * mem->size), &next, sizeof(void *));
