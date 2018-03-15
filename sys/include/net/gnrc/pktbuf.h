@@ -275,6 +275,8 @@ gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt, gnrc_pktsnip_t *ol
  */
 gnrc_pktsnip_t *gnrc_pktbuf_duplicate_upto(gnrc_pktsnip_t *pkt, gnrc_nettype_t type);
 
+gnrc_pktsnip_t *gnrc_pktbuf_merge(gnrc_pktsnip_t *pkt);
+
 #ifdef DEVELHELP
 /**
  * @brief   Prints some statistics about the packet buffer to stdout.

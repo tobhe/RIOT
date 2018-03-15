@@ -86,5 +86,22 @@ gnrc_pktsnip_t *gnrc_pktbuf_replace_snip(gnrc_pktsnip_t *pkt,
     return pkt;
 }
 
+gnrc_pktsnip_t *gnrc_pktbuf_merge(gnrc_pktsnip_t *pkt)
+{
+
+  gnrc_pktsnip_t *new = gnrc_pktbuf_add(NULL, NULL, gnrc_pkt_len(pkt), pkt->type);
+    uint8_t *new_data = (uint8_t *) new->data;
+
+    size_t iter = 0;
+    while (pkt != NULL) {
+        if (pkt->data != NULL) {
+            memcpy(&new_data[iter], pkt->data, pkt->size);
+            iter += pkt->size;
+        }
+        pkt = pkt->next;
+    }
+
+    return new;
+}
 
 /** @} */
